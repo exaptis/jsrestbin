@@ -1,0 +1,76 @@
+<h1>JsRestBin API</h1>
+<br/>
+<p>
+    The JsRestBin API allows third-party application developers to operate the application via REST calls.
+</p>
+
+
+<h2>Sample call</h2>
+<div class="well">
+    http://
+    <server>/api/bins/cq5mi/requests/latest
+</div>
+
+
+<h2>REST Methods</h2>
+<div class="row-fluid">
+<table class="table table-bordered table-nonfluid">
+    <thead>
+    <tr>
+        <th>Call</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>GET</td>
+        <td>Retrieves information.</td>
+    </tr>
+    <tr>
+        <td>PUT</td>
+        <td>Updates existing information.</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>Creates new information.</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>Removes existing information.</td>
+    </tr>
+    </tbody>
+</table>
+</div>
+
+
+<h2>API Specification</h2>
+<table class="table table-bordered table-api table-nonfluid">
+    <thead>
+    <tr>
+        <th>Endpoint</th>
+        <th colspan="5">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td rowspan="5">/bins</td>
+        <td colspan="4">Provides a list of all bins</td>
+    </tr>
+    <tr>
+        <td rowspan="4">/:bin_id</td>
+        <td colspan="3">Shows a particular bin</td>
+    </tr>
+    <tr>
+        <td rowspan="3">/requests</td>
+        <td colspan="2">Provides a list of all recorded requests for the bin</td>
+    </tr>
+    <tr>
+        <td>/:request_id</td>
+        <td>Shows a particular request of the given bin</td>
+    </tr>
+    <tr>
+        <td>/latest</td>
+        <td>Shows the last recorded request</td>
+    </tr>
+    </tbody>
+</table>

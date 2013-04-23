@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>jsRestBin</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="less/main.css">
+
+        <script data-main="js/main" src="js/libs/require/require.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 9]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">
+                        <img src="/img/logo.png" title="jsRestBin Logo"/>
+                    </a>
+                    <nav>
+                        <div class="nav-collapse collapse">
+                            <ul id="navigation" class="nav nav-pills">
+                                <li class="active"><a href="#" data-target="home">Home</a></li>
+                                <li><a href="#" data-target="api">API</a></li>
+                                <li><a href="https://github.com/exaptis/jsrestbin">Source</a></li>
+                                <li><a href="https://groups.google.com/forum/#!forum/jsrequestbin">Discuss</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid container-flat container-content">
+            <div class="row-fluid">
+                <div class="span3 nav-sidebar">
+                    <aside>
+                        <h2>Bin List</h2>
+                        <div id="bins" class="bins">
+                        </div>
+
+                        <h2>Add new Bin</h2>
+                        <form method="post" id="createBin">
+                            <input type="text" name="name" id="name" class="input-block-level" placeholder="Enter Bin Name ...">
+                            <button type="submit" name="submit" id="submit" class="btn btn-primary">Create Bin »</button>
+                        </form>
+                    </aside>
+                </div>
+                <div class="span9 content" id="content">
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; David Loidolt 2013</p>
+        </footer>
+
+    </body>
+</html>
