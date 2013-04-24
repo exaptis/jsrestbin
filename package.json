@@ -1,5 +1,3 @@
-//noinspection JSLint
-
 {
     "name": "jsrestbin",
     "description": "JavaScript based application to record WebHook's and API-Calls",
@@ -8,7 +6,7 @@
         "type": "git",
         "url": "https://github.com/exaptis/jsrestbin.git"
     },
-    "version": "0.1",
+    "version": "0.1.0",
     "private": false,
     "dependencies": {
         "express": "3.x",
