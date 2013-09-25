@@ -58,6 +58,10 @@ This project was inspired by Jeff Lindsay's RequestBin [http://requestb.in/](htt
 * Exchange REST Interface `express.js` with `baucis.js`
 * ...
 
+##Slides
+
+Presentation at vienna.js @ 25.09.2013: [http://bit.ly/jsrestbinV2](http://bit.ly/jsrestbinV2)
+
 ##Contributors
 David Loidolt david.loidolt@gmail.com
 
