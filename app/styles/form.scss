@@ -1,0 +1,78 @@
+@charset "UTF-8";
+.container-form {
+  border-top: 0.1em solid white;
+}
+
+.form-horizontal {
+
+  label.checkbox {
+    margin: 0;
+  }
+
+  .form-actions {
+    background-color: #f7f7f7;
+    padding: 2.5em 0 0 2em;
+    margin: 0 0 0 18em;
+    border: none;
+  }
+
+  .control-group {
+    margin-bottom: 0;
+
+    .control-label {
+      padding: 1em 0 0 1em;
+      text-align: left;
+      margin-bottom: 0;
+    }
+
+    .controls {
+      padding: 1em 0 0 2em;
+      background-color: #f7f7f7;
+    }
+
+    :first-child .controls,
+    :first-child .control-label {
+      padding-top: 1.5em;
+    }
+  }
+
+  .separator-group   {
+    .controls,
+    .control-label {
+      padding: 0.5em 0;
+      border-bottom: 0.1em solid #cdcdcd;
+      margin-bottom: 0;
+    }
+
+    .controls {
+      background-color: #f7f7f7;
+    }
+
+    .control-label {
+      width: 175px;
+    }
+  }
+
+  .controls {
+
+    .input-append {
+      font-size: 1em;
+      margin-bottom: 0;
+    }
+
+    .input-append .add-on,
+    .input-prepend .add-on {
+      font-size: 1em;
+      padding: 0;
+      height: 1.9em;
+      margin-left: -0.5em;
+      margin-top: 0.1em;
+    }
+
+    .radio:not(.inline):first-child,
+    .checkbox:not(.inline):first-child {
+      padding-top: 0;
+    }
+  }
+}
+

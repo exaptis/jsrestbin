@@ -1,0 +1,167 @@
+$iconSpritePath: "../images/glyphicons-halflings.png" !default;
+$iconWhiteSpritePath: "../images/glyphicons-halflings-white.png" !default;
+
+@import 'sass-bootstrap/lib/bootstrap';
+@import 'sass-bootstrap/lib/responsive';
+
+@import 'requests';
+@import 'navigation';
+//@import 'form';
+
+$navbar-height: 4em;
+$footer-height: 3em;
+
+body {
+  font-size: 10px;
+}
+
+a, a:focus, a:hover {
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1em;
+}
+
+.meta {
+  color: #aaa;
+
+  p {
+    margin: 0 0 0.2em 0;
+  }
+}
+
+.modal {
+  font-size: 1.5em;
+}
+
+footer {
+  line-height: 2.9em;
+}
+
+footer > p {
+  border-top: 0.1em solid #eee;
+  padding: 0 0 0 1em;
+  margin: 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.content {
+  font-size: 1.4em;
+}
+
+.container-flat {
+  padding: 0;
+}
+
+.navbar .brand {
+  padding: 0.3em 1em 0.3em 0.3em;
+}
+
+.nav-sidebar {
+  padding: 2em 3em 2em 2em;
+  font-size: 1.2em;
+  background-color: #f0f0f0;
+
+  h2 {
+    font-size: 1.3em;
+    line-height: 2em;
+    margin: 0 0 0.3em 0;
+  }
+}
+
+.table {
+  th {
+    color: #000;
+    background-color: #F0F0F0;
+  }
+}
+
+.table-api {
+  td:first-child {
+    font-family: "Cutive Mono";
+    color: $text-color-blue;
+  }
+}
+
+.table-nonfluid {
+  width: auto;
+}
+
+footer {
+  p {
+    color: #707070;
+  }
+}
+
+@media (min-width: 768px) {
+
+  .navbar {
+    height: $navbar-height;
+  }
+
+  .nav-sidebar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+    border-right: 0.1em solid #dfdfdf;
+  }
+
+  .container-content {
+    position: absolute;
+    top: $navbar-height;
+    bottom: $footer-height;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+  }
+
+  .content {
+    position: absolute;
+    right: 0;
+    padding-top: 2em;
+    padding-right: 2.564102564102564%;
+    height: 100%;
+    overflow: auto;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: $footer-height;
+  }
+}
+
+@media (max-width: 767px) {
+  body {
+    padding: 0;
+  }
+
+  .content {
+    padding: 1em;
+  }
+
+  .navbar .btn-navbar {
+    margin-top: 0.4em;
+  }
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.no-padding {
+  padding: 0 !important;
+}

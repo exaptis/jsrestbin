@@ -1,0 +1,60 @@
+<form method="post" class="form-horizontal no-margin">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="border-bottom-medium">Delte bin</h3>
+    </div>
+
+    <div class="modal-body no-padding-top">
+        <div class="alert alert-warn no-border-radius margin-bottom-small">
+            <strong>Warning</strong>
+            Data will be permanently lost
+        </div>
+
+        <div class="border-top-small">
+            <div class="container-form container-gradient">
+                <div class="control-group">
+                    <label class="control-label" for="project">
+                        Bin
+                    </label>
+
+                    <div class="controls">
+                        <span id="project">
+                            <input type="text" value="{{ name }}" disabled>
+                        </span>
+                    </div>
+                </div>
+                <div class="separator-group clearfix">
+                    <label class="control-label"></label>
+
+                    <div class="controls"></div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                    </label>
+
+                    <div class="controls">
+                    <span>
+                        Do you really want to delete this bin?
+                    </span>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label class="control-label"></label>
+
+                    <div class="controls">
+
+                        <div class="gradient-bottom-fade"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal" aria-hidden="true">
+            Cancel
+        </button>
+        <button type="submit" class="btn btn-danger">
+            Delete
+        </button>
+    </div>
+</form>

@@ -1,0 +1,65 @@
+<div class="span3 meta">
+    <h2>
+        #{{ reference }}
+    </h2>
+
+    <p>
+        {{#dateFormat createdAt}}{{/dateFormat}}
+    </p>
+
+    <p>{{ ip }}</p>
+
+    <p>{{ type }}</p>
+</div>
+<div class="span9">
+
+    <h2>{{ type }}</h2>
+
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="#headers-{{ _id }}" data-toggle="tab">Headers</a>
+        </li>
+        <li>
+            <a href="#cookies-{{ _id }}" data-toggle="tab">Cookies</a>
+        </li>
+        <li class="active">
+            <a href="#content-{{ _id }}" data-toggle="tab">Content</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane" id="headers-{{ _id }}">
+            <ul class="nav nav-list">
+                <li class="nav-header">Headers</li>
+                {{#eachProperty headers}}
+                    <li>
+                        <strong>{{ property }}</strong> :
+                        <span class="{{ property }}">{{ value }}</span>
+                    </li>
+                {{/eachProperty}}
+            </ul>
+        </div>
+        <div class="tab-pane" id="cookies-{{ _id }}">
+            <ul class="nav nav-list">
+                <li class="nav-header">Cookies</li>
+                {{#eachProperty cookies}}
+                    <li>
+                        <strong>{{ property }}</strong> :
+                        <span class="{{ property }}">{{ value }}</span>
+                    </li>
+                {{/eachProperty}}
+            </ul>
+        </div>
+        <div class="tab-pane active" id="content-{{ _id }}">
+            <ul class="nav nav-list">
+                <li class="nav-header">Parameters</li>
+                {{#eachProperty content}}
+                    <li>
+                        <strong>{{ property }}</strong> :
+                        <span class="{{ property }}">{{ value }}</span>
+                    </li>
+                {{/eachProperty}}
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<form method="post" class="form-horizontal no-margin">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="border-bottom-medium" data-hide="bin.isCopy">
+            Add bin
+        </h3>
+
+        <h3 class="border-bottom-medium" data-show="bin.isCopy">
+            Edit bin
+        </h3>
+    </div>
+
+    <div class="modal-body no-padding-top">
+        <div class="container-form container-gradient">
+            <div class="control-group">
+                <label class="control-label" for="project">
+                    Name:
+                </label>
+
+                <div class="controls">
+                    <span id="project">
+                        <input type="text" data-value="bin.name" autofocus="on"/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal" aria-hidden="true">
+            Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" data-hide="bin.isCopy">
+            Add
+        </button>
+        <button type="submit" class="btn btn-primary" data-show="bin.isCopy">
+            Edit
+        </button>
+    </div>
+</form>
