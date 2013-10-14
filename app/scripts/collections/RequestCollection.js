@@ -13,6 +13,8 @@ define([
             initialize: function (models, options) {
                 console.log('initialize a RequestCollection');
 
+                this.limit = 25;
+
                 if (options) {
                     this.binId = options.binId;
                     this.fetchLatest = options.fetchLatest;
@@ -20,7 +22,7 @@ define([
             },
 
             url: function () {
-                return '/api/v1/bins/' + this.binId + '/requests' + (this.fetchLatest ? '/latest' : '');
+                return '/api/v1/bins/' + this.binId + '/requests?limit=' + (this.fetchLatest ? 1 : this.limit);
             }
         });
     });

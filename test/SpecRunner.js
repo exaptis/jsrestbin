@@ -62,8 +62,7 @@ require([
     'spec/testSuite',
     'backbone',
     'marionetteApplicationConfig',
-    'marionetteControllerConfig',
-    'backboneModelConfig'
+    'marionetteControllerConfig'
 ],
     function ($, testSuite) {
 

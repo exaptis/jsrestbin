@@ -1,29 +1,26 @@
 'use strict';
 
-var express = require('express');
-var http = require('http');
-var path = require('path');
 //var async = require('async');
 //var hbs = require('express-hbs');
-//var baucis = require('baucis');
-var config = require('./config.js');
 
-var app = express(),
-    conf = new config();
-
+var express = require('express');
 var mongoose = require('mongoose');
+var baucis = require('baucis');
 
+var http = require('http');
+var path = require('path');
+var config = require('./config.js');
+var conf = new config();
 
-// start mongoose
+// Connect to the Mongo instance
 mongoose.connect(conf.mongodb.connection, conf.mongodb.options);
 var db = mongoose.connection;
 
+/* ==============================
+ COMMON UTILS
+ ============================== */
 
 var Utils = {
-    UUID: function () {
-        return Math.random().toString(36).substring(12);
-    },
-
     merge: function (a, b) {
         for (var i in b) {
             a[i] = b[i];
@@ -32,212 +29,138 @@ var Utils = {
     }
 };
 
-// schemas
-var RequestSchema = mongoose.Schema({
+/* ==============================
+ SCHEMA
+ ============================== */
+
+// Create schema
+var Request = mongoose.Schema({
     createdAt: {
         type: Date,
         'default': Date.now
     },
-    type: { type: String, require: true, unique: false },
-    reference: { type: String, require: true, unique: false },
+    binId: {
+        type: String,
+        require: true
+    },
+    type: {
+        type: String,
+        require: true
+    },
+    ip: {
+        type: String
+    },
     headers: {},
     content: {},
-    cookies: {},
-    ip: { type: String, require: false, unique: false }
+    cookies: {}
+});
+
+var Bin = mongoose.Schema({
+    name: {
+        type: String,
+        require: true,
+        unique: true
+    },
+    createdAt: {
+        type: Date,
+        'default': Date.now
+    }
+});
+
+// Register the schema
+var RequestModel = mongoose.model('request', Request);
+var BinModel = mongoose.model('bin', Bin);
+
+/* ==============================
+ MIDDLEWARE
+ ============================== */
+
+Request.pre('save', function (next) {
+    console.log('A Request was saved to Mongo: %s.', this.get('type'));
+    next();
+});
+
+Bin.pre('save', function (next) {
+    console.log('A Bin was saved to Mongo: %s.', this.get('name'));
+    next();
+});
+
+Bin.post('remove', function (next) {
+    console.log('A Bin was deleted from Mongo: %s.', this.get('name'));
+    next();
 });
 
 
-var BinSchema = mongoose.Schema({
-    name: { type: String, require: true, unique: true },
-    reference: { type: String, require: true, unique: true },
-    createdAt: { type: Date, 'default': Date.now },
-    requests: [RequestSchema]
+/* ==============================
+ API ROUTE
+ ============================== */
+
+var requestController = baucis.rest({
+    singular: 'request',
+    basePath: '/:binId/requests'
 });
 
-BinSchema.statics.findByReference = function (reference, cb) {
-    this.findOne({ reference: new RegExp(reference, 'i')}, cb);
-};
+var binController = baucis.rest({
+    singular: 'bin'
+});
 
 
-var RequestModel = mongoose.model('request', RequestSchema);
+binController.use(requestController);
 
-var BinModel = mongoose.model('bin', BinSchema);
+/* ==============================
+ CONTROLLER
+ ============================== */
+
+requestController.query('head get put', function (request, response, next) {
+    request.baucis.query.where('binId', request.params.binId);
+    next();
+});
 
 
-// REST api callbacks
-var bin = {};
+/* ==============================
+ CONTROLLER
+ ============================== */
 
-bin.add = function (req, res) {
+var handler = {};
+handler.recordRequest = function (httpRequest, response) {
+    return BinModel.findById(httpRequest.params.binId, function (err, bin) {
 
-    var bin = new BinModel({
-        name: req.body.name,
-        reference: Utils.UUID()
-    });
+        httpRequest.cookies = {};
 
-    return bin.save(function (err) {
-        if (!err) {
-            return res.send(201, bin);
-        }
-
-        return res.send(500, err);
-    });
-};
-
-bin.recordRequest = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
-
-        req.cookies = {};
-
-        if (req.headers.cookie) {
-            var cookies = req.headers.cookie.split(';');
+        if (httpRequest.headers.cookie) {
+            var cookies = httpRequest.headers.cookie.split(';');
 
             cookies.forEach(function (cookie) {
                 var data = cookie.trim().split('=');
-                req.cookies[data[0]] = data[1];
+                httpRequest.cookies[data[0]] = data[1];
             });
 
-            delete req.headers.cookie;
+            delete httpRequest.headers.cookie;
         }
 
         var request = new RequestModel({
-            type: req.method,
-            reference: Utils.UUID(),
-            headers: req.headers,
-            content: Utils.merge(req.body, req.query),
-            cookies: req.cookies,
-            ip: req.ip
+            type: httpRequest.method,
+            headers: httpRequest.headers,
+            content: Utils.merge(httpRequest.body, httpRequest.query),
+            cookies: httpRequest.cookies,
+            ip: httpRequest.ip,
+            binId: bin.get('id')
         });
 
-        bin.requests.push(request);
 
-        return bin.save(function (err) {
+        return request.save(function (err) {
             if (!err) {
-                return res.send(201, request);
+                return response.send(201, request);
             }
 
-            return res.send(500);
+            return response.send(500);
         });
-    });
-};
-
-bin.findAll = function (req, res) {
-    return BinModel.find(function (err, bins) {
-        if (!err) {
-
-            Object.keys(bins).forEach(function (key) {
-                bins[key].requests = null;
-            });
-
-            return res.send(200, bins);
-        }
-
-        return res.send(500);
-    });
-};
-
-bin.findByReference = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
-        if (!err) {
-            bin.requests = null;
-            return res.send(200, bin);
-        }
-
-        return res.send(500);
-    });
-};
-
-bin.findAllRequests = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
-        if (!err && bin) {
-            return res.send(200, bin.requests);
-        }
-
-        return res.send(500);
-    });
-};
-
-bin.findLatestRequest = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
-        if (!err) {
-            var requests = [];
-
-            if (bin.requests.length > 0) {
-                requests = bin.requests.pop();
-            }
-            return res.send(200, requests);
-        }
-
-        return res.send(500);
-    });
-};
-
-bin.findRequestById = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
-        if (!err) {
-            for (var i = bin.requests.length - 1; i >= 0; i--) {
-                if (bin.requests[i]['_id'].toString() === req.params.rid) {
-                    return res.send(200, bin.requests[i]);
-                }
-            }
-
-            return res.send(404);
-        }
-
-        return res.send(500);
-    });
-};
-
-bin.deleteAll = function (req, res) {
-    BinModel.remove(function (err) {
-        return res.send(err ? 500 : 204);
-    });
-};
-
-bin.deleteBin = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
-        return bin.remove(function (err) {
-            return res.send(err ? 500 : 204);
-        });
-    });
-};
-
-bin.deleteAllRequests = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
-        if (!err) {
-            bin.requests = [];
-            bin.save();
-            return res.send(204);
-        }
-
-        return res.send(500);
-    });
-};
-
-bin.deleteRequest = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
-        if (!err) {
-            for (var i = bin.requests.length - 1; i >= 0; i--) {
-                if (bin.requests[i]['_id'].toString() === req.params.rid) {
-                    bin.requests = bin.requests.splice(i, 1);
-                    bin.save();
-                    return res.send(204);
-                }
-            }
-            return res.send(404);
-        }
-
-        return res.send(500);
     });
 };
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
-
-//    baucis.rest({ singular: 'request' });
-//    baucis.rest({ singular: 'bin' });
-
     var app = express();
-
     app.configure(function () {
         app.set('port', 9000);
         app.set('view engine', 'handlebars');
@@ -245,40 +168,13 @@ db.once('open', function callback() {
     });
 
 //    app.use(express.urlencoded());
-//    app.use('/api/v1', baucis({ swagger: true }));
-
-    //parse body
+    app.use('/api/v1', baucis({ swagger: true }));
     app.use(express.bodyParser())
 
-
-    app.get('/bins/:reference', bin.recordRequest);
-    app.put('/bins/:reference', bin.recordRequest);
-    app.post('/bins/:reference', bin.recordRequest);
-    app.delete('/bins/:reference', bin.recordRequest);
-
-
-    // Default
-    app.get('/api', function (req, res) {
-        res.send(200, 'jsRestBin API is running');
-    });
-
-    // ADD
-    app.post('/api/v1/bins', bin.add);
-    app.post('/api/v1/bins/:reference/requests', bin.recordRequest);
-
-    // VIEW
-    app.get('/api/v1/bins', bin.findAll);
-    app.get('/api/v1/bins/:reference', bin.findByReference);
-    app.get('/api/v1/bins/:reference/requests', bin.findAllRequests);
-    app.get('/api/v1/bins/:reference/requests/latest', bin.findLatestRequest);
-    app.get('/api/v1/bins/:reference/requests/:rid', bin.findRequestById);
-
-    // DELETE
-    app.delete('/api/v1/bins', bin.deleteAll);
-    app.delete('/api/v1/bins/:reference', bin.deleteBin);
-    app.delete('/api/v1/bins/:reference/requests', bin.deleteAllRequests);
-    app.delete('/api/v1/bins/:reference/requests/:rid', bin.deleteRequest);
-
+    app.get('/api/v1/bins/:binId/record', handler.recordRequest);
+    app.put('/api/v1/bins/:binId/record', handler.recordRequest);
+    app.post('/api/v1/bins/:binId/record', handler.recordRequest);
+    app.delete('/api/v1/bins/:binId/record', handler.recordRequest);
 
     // simple log
     app.use(function (req, res, next) {
@@ -289,11 +185,16 @@ db.once('open', function callback() {
     // mount static
     app.use(express.static(path.join(__dirname, '../app')));
     app.use(express.static(path.join(__dirname, '../.tmp')));
-
+    app.use('/swagger-gui', express.static(path.join(__dirname, '../swagger-gui')));
 
     // route index.html
     app.get('/', function (req, res) {
         res.sendfile(path.join(__dirname, '../app/index.html'));
+    });
+
+    // route swagger-gui/index.html
+    app.get('/swagger-gui', function (req, res) {
+        res.sendfile(path.join(__dirname, '../swagger-gui/index.html'));
     });
 
     // start server

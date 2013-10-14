@@ -9,7 +9,7 @@ define([
 
             __name__: "RequestModel",
 
-            idAttribute: "reference",
+            idAttribute: "_id",
 
             defaults: {
                 "headers": {},

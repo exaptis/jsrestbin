@@ -28,7 +28,7 @@ define([
 
             serializeData: function () {
                 return {
-                    remoteUrl: document.location.origin + '/bins/' + this.binId
+                    remoteUrl: document.location.origin + '/api/v1/bins/' + this.binId + '/record'
                 };
             },
 

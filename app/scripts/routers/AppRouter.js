@@ -12,8 +12,8 @@ define([
         AppRouter = Backbone.Marionette.AppRouter.extend({
             appRoutes: {
                 'bins': 'listBins',
-                'bins/:reference/requests': 'listRequests',
-                'bins/:reference/requests/latest': 'listLatestRequest',
+                'bins/:binId/requests': 'listRequests',
+                'bins/:binId/requests/latest': 'listLatestRequest',
                 'static/:page': 'showStaticPage'
             }
         }),
@@ -54,7 +54,7 @@ define([
             });
 
             App.on('navigation:showPage', function (page) {
-                App.navigate('static/'+ page);
+                App.navigate('static/' + page);
             });
 
             App.addInitializer(function () {

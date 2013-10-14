@@ -8,7 +8,7 @@ define([
         return Backbone.Model.extend({
             __name__: "BinModel",
 
-            idAttribute: "reference",
+            idAttribute: "_id",
 
             defaults: {
                 isActive: false

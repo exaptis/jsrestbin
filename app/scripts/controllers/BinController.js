@@ -26,6 +26,7 @@ define([
                 var binCollectionView = this.getRequestsCompositeView(binCollection);
 
                 binCollectionView.on('bin:new', this.showNewBinDialog, this);
+                binCollectionView.on('bin:filter', this.filterBinView, this);
                 binCollectionView.on('itemview:bin:requests:list', this.listRequests, this);
                 binCollectionView.on('itemview:bin:requests:listLatest', this.listLatestRequest, this);
                 binCollectionView.on('itemview:bin:delete', this.showDeleteBinDialog, this);
@@ -76,6 +77,10 @@ define([
                 }, this);
 
                 this.getApplication().modal.show(binAddEditFormItemView);
+            },
+
+            filterBinView: function (name, collection) {
+
             },
 
             destroyBin: function (bin) {
