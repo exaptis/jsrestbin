@@ -68,7 +68,7 @@ var Utils = {
 
 
 BinSchema.statics.findByReference = function (reference, cb) {
-    this.findOne({ reference: new RegExp(reference, 'i')}, cb);
+    return this.findOne({ reference: new RegExp(reference, 'i')}, cb);
 };
 
 // models
@@ -99,6 +99,10 @@ bin.add = function (req, res) {
 bin.recordRequest = function (req, res) {
     return BinModel.findByReference(req.params.reference, function (err, bin) {
 
+        if (bin === null) {
+            return res.send(404);
+        }
+
         req.cookies = {};
 
         if (req.headers.cookie) {
@@ -116,7 +120,7 @@ bin.recordRequest = function (req, res) {
             type: req.method,
             reference: Utils.UUID(),
             headers: req.headers,
-            content: Utils.merge(req.body,req.query),
+            content: Utils.merge(req.body, req.query),
             cookies: req.cookies,
             ip: req.ip
         });
@@ -160,13 +164,13 @@ bin.findByReference = function (req, res) {
 };
 
 bin.findAllRequests = function (req, res) {
-    return BinModel.findByReference(req.params.reference, function (err, bin) {
+    return BinModel.findByReference(req.params.reference,function (err, bin) {
         if (!err && bin) {
             return res.send(200, bin.requests);
         }
 
         return res.send(500);
-    });
+    }).limit(100);
 };
 
 bin.findLatestRequest = function (req, res) {
