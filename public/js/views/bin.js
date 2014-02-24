@@ -20,14 +20,15 @@ define([
         },
 
         events: {
-            "click a.delete": "deleteBin",
-            "click a.select": "select",
-            "click a.latest": "selectLatest"
+            'click a.empty': 'deleteAllRequests',
+            'click a.delete': 'deleteBin',
+            'click a.select': 'select',
+            'click a.latest': 'selectLatest'
         },
 
         markAsActive: function () {
-            this.$el.toggleClass("active", this.model.get('isActive'));
-            this.$el.find('i').toggleClass("icon-white", this.model.get('isActive'));
+            this.$el.toggleClass('active', this.model.get('isActive'));
+            this.$el.find('i').toggleClass('icon-white', this.model.get('isActive'));
             return this;
         },
 
@@ -38,7 +39,7 @@ define([
 
         selectLatest: function (e) {
             e.preventDefault();
-            this.renderRequests("latest");
+            this.renderRequests('latest');
         },
 
         render: function () {
@@ -56,7 +57,7 @@ define([
             });
 
             requests = new RequestsCollection([], {
-                query: this.model.collection.query + '/' + this.model.get('reference') + '/requests/' + (path || "")
+                query: this.model.collection.query + '/' + this.model.get('reference') + '/requests/' + (path || '')
             });
 
             requests.fetch({
@@ -83,7 +84,7 @@ define([
         deleteBin: function (e) {
 
             var self = this;
-            bootbox.confirm("Do you really want to delete this Bin?", "No", "Yes", function (result) {
+            bootbox.confirm('Do you really want to delete this Bin?', 'No', 'Yes', function (result) {
                 if (result === true) {
                     self.remove();
                     self.model.destroy();
@@ -91,6 +92,21 @@ define([
             });
 
             e.preventDefault();
+        },
+
+        deleteAllRequests: function (event) {
+
+            var self = this;
+            bootbox.confirm('Do you really want to empty this Bin?', 'No', 'Yes', function handleResult(result) {
+                if (result === true) {
+                    $.ajax({
+                        url: self.model.collection.query + '/' + self.model.get('reference') + '/requests/',
+                        type: 'DELETE'
+                    });
+                }
+            });
+
+            event.preventDefault();
         }
 
 
