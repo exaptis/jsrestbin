@@ -2,6 +2,9 @@
     "name": "jsrestbin",
     "description": "JavaScript based application to record WebHook's and API-Calls",
     "author": "David Loidolt <david.loidolt@gmail.com>",
+    "contributors": [
+        "Andy Tang <andyt@live.nl>"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/exaptis/jsrestbin.git"
