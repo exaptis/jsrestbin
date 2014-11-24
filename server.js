@@ -5,7 +5,6 @@ var application_root = __dirname,
     path = require("path"),
     mongoose = require('mongoose'),
     properties = require('./properties.js'),
-    FifoArray = require('fifo-array'),
     Config = require('./config.js');
 
 var app = express(),
@@ -126,11 +125,12 @@ bin.recordRequest = function (req, res) {
             ip: req.ip
         });
 
-        var requests = new FifoArray(properties.maxSizeRequests, bin.requests);
-        requests.push(request);
-        bin.requests = requests;
-
+        if (bin.requests.length >= properties.maxSizeRequests) {
+            var amount = bin.requests.length - properties.maxSizeRequests + 1;
+            bin.requests.splice(0, amount);
+        }
         bin.requests.push(request);
+
 
         return bin.save(function (err) {
             if (!err) {
