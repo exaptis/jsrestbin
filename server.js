@@ -4,6 +4,8 @@ var application_root = __dirname,
     express = require("express"),
     path = require("path"),
     mongoose = require('mongoose'),
+    properties = require('./properties.js'),
+    FifoArray = require('fifo-array'),
     Config = require('./config.js');
 
 var app = express(),
@@ -98,7 +100,6 @@ bin.add = function (req, res) {
 
 bin.recordRequest = function (req, res) {
     return BinModel.findByReference(req.params.reference, function (err, bin) {
-
         if (bin === null) {
             return res.send(404);
         }
@@ -124,6 +125,10 @@ bin.recordRequest = function (req, res) {
             cookies: req.cookies,
             ip: req.ip
         });
+
+        var requests = new FifoArray(properties.maxSizeRequests, bin.requests);
+        requests.push(request);
+        bin.requests = requests;
 
         bin.requests.push(request);
 
