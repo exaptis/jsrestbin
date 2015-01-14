@@ -4,6 +4,7 @@ var application_root = __dirname,
     express = require("express"),
     path = require("path"),
     mongoose = require('mongoose'),
+    properties = require('./properties.js'),
     Config = require('./config.js');
 
 var app = express(),
@@ -98,7 +99,6 @@ bin.add = function (req, res) {
 
 bin.recordRequest = function (req, res) {
     return BinModel.findByReference(req.params.reference, function (err, bin) {
-
         if (bin === null) {
             return res.send(404);
         }
@@ -125,7 +125,11 @@ bin.recordRequest = function (req, res) {
             ip: req.ip
         });
 
+        if (bin.requests.length === properties.maxSizeRequests) {
+            bin.requests.shift();
+        }
         bin.requests.push(request);
+
 
         return bin.save(function (err) {
             if (!err) {
