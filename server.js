@@ -125,9 +125,8 @@ bin.recordRequest = function (req, res) {
             ip: req.ip
         });
 
-        if (bin.requests.length >= properties.maxSizeRequests) {
-            var amount = bin.requests.length - properties.maxSizeRequests + 1;
-            bin.requests.splice(0, amount);
+        if (bin.requests.length === properties.maxSizeRequests) {
+            bin.requests.shift();
         }
         bin.requests.push(request);
 
